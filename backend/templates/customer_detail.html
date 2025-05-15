@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details - {{ customer.name }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #004085;
+            margin-top: 20px;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .info-field {
+            font-size: 1.1rem;
+            color: #333;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-group {
+            margin-top: 20px;
+        }
+        .info-card {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="header-title">Customer Details - <strong>{{ customer.name }}</strong></h1>
+
+        <!-- Customer Info Card -->
+        <div class="card info-card">
+            <h4>Thông Tin Khách Hàng</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="name">Họ Tên</label>
+                        <div class="info-field">{{ customer.name }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">SĐT</label>
+                        <div class="info-field">{{ customer.phone }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Địa Chỉ</label>
+                        <div class="info-field">{{ customer.address }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Ngày Sinh</label>
+                        <div class="info-field">{{ customer.dob }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Tình Trạng</label>
+                        <div class="info-field">{{ customer.status }}</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="cccd">Mã NV, CCCD</label>
+                        <div class="info-field">{{ customer.cccd }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Chức Vụ</label>
+                        <div class="info-field">{{ customer.role }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="program">CT Áp Dụng</label>
+                        <div class="info-field">{{ customer.program }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Ghi Chú</label>
+                        <div class="info-field">{{ customer.notes }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="date_added">Ngày Nhập</label>
+                        <div class="info-field">{{ customer.date_added }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Info -->
+            <h4>Thông Tin Điều Trị</h4>
+            <div class="form-group">
+                <label for="treatment_plan">Lộ Trình Chữa Bệnh</label>
+                <div class="info-field">{{ customer.treatment_plan if customer.treatment_plan else 'Chưa có thông tin' }}</div>
+            </div>
+            <div class="form-group">
+                <label for="appointment_schedule">Lịch Đặt Hẹn</label>
+                <div class="info-field">{{ customer.appointment_schedule if customer.appointment_schedule else 'Chưa có thông tin' }}</div>
+            </div>
+            <div class="form-group">
+                <label for="revenue">Doanh Thu</label>
+                <div class="info-field">{{ customer.revenue if customer.revenue else 'Chưa có thông tin' }}</div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="btn-group">
+                <a href="{{ url_for('edit_customer', customer_id=customer.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{{ url_for('delete_customer', customer_id=customer.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                <a href="{{ url_for('index') }}" class="btn btn-back btn-sm">Back to Customer List</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
