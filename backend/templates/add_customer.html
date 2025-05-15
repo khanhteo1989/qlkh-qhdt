@@ -1,1 +1,59 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Customer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Add Customer</h1>
+        <form action="{{ url_for('add_customer') }}" method="POST">
+            <div class="form-group">
+                <label for="name">Họ Tên</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Địa Chỉ</label>
+                <input type="text" class="form-control" id="address" name="address" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">SĐT</label>
+                <input type="text" class="form-control" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="cccd">Mã NV, CCCD</label>
+                <input type="text" class="form-control" id="cccd" name="cccd" required>
+            </div>
+            <div class="form-group">
+                <label for="dob">Ngày Sinh</label>
+                <input type="date" class="form-control" id="dob" name="dob" required>
+            </div>
+            <div class="form-group">
+                <label for="cv_code">Gắn Mã CV</label>
+                <select class="form-control" id="cv_code" name="cv_code" required>
+                    <option value="">Chọn Chuyên Viên</option>
+                    {% for code in cv_codes %}
+                        <option value="{{ code }}">{{ code }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="status">Tình Trạng</label>
+                <input type="text" class="form-control" id="status" name="status" required>
+            </div>
+            <div class="form-group">
+                <label for="program">CT Áp Dụng</label>
+                <input type="text" class="form-control" id="program" name="program" required>
+            </div>
+            <div class="form-group">
+                <label for="notes">Ghi Chú</label>
+                <textarea class="form-control" id="notes" name="notes"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Thêm Khách Hàng</button>
+        </form>
+        
+    </div>
+</body>
+</html>
