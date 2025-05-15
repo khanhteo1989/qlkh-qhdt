@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Khách Hàng - Khách Hàng Doanh Nghiệp - P.QHĐT</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #004085;
+            margin-top: 20px;
+        }
+        .banner {
+            background: rgba(65, 81, 136, 0.7); 
+            padding: 20px;
+            text-align: center;
+            color: rgb(238, 232, 232);
+            position: relative;
+        }
+        .banner img {
+            width: 150px;
+            margin-right: 20px;
+        }
+        .banner h1 {
+            font-size: 3rem;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .btn-upload {
+            background-color: #17a2b8;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-custom {
+            background-color: #28a745;
+            color: white;
+        }
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="banner d-flex justify-content-center align-items-center">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+        <h1>Quản Lý Khách Hàng - Khách Hàng Doanh Nghiệp - P.QHĐT</h1>
+    </div>
+
+    <div class="container mt-5">
+        <form action="{{ url_for('add_customer') }}" method="POST" class="mb-4 card p-4">
+            <h3>THÊM KHÁCH HÀNG</h3>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="name">Họ Tên</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="phone">SĐT</label>
+                    <input type="text" id="phone" name="phone" class="form-control" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="address">Địa Chỉ</label>
+                    <input type="text" id="address" name="address" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="dob">Ngày Sinh</label>
+                    <input type="date" id="dob" name="dob" class="form-control" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="cccd">Mã NV, CCCD</label>
+                    <input type="text" id="cccd" name="cccd" class="form-control" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="cv_code">Gắn Mã CV</label>
+                    <select class="form-control" id="cv_code" name="cv_code" required>
+                        <option value="">Chọn Chuyên Viên</option>
+                        {% for code in cv_codes %}
+                            <option value="{{ code }}">{{ code }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="status">Tình Trạng</label>
+                    <input type="text" class="form-control" id="status" name="status" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="program">CT Áp Dụng</label>
+                    <input type="text" class="form-control" id="program" name="program" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="notes">Ghi Chú</label>
+                    <textarea class="form-control" id="notes" name="notes"></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-custom">Thêm Khách Hàng</button>
+        </form>
+
+        <!-- Upload Excel File -->
+        <a href="{{ url_for('upload_file') }}" class="btn btn-upload mb-3">Upload Excel File</a>
+
+        <h2>DANH SÁCH  (Total: {{ customers.total }})</h2>
+        
+        <input type="text" class="form-control mb-3" id="searchCustomer" placeholder="Search for a customer...">
+        
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Họ Tên</th>
+                    <th>SĐT</th>
+                    <th>Địa Chỉ</th>
+                    <th>Chức Vụ</th>
+                    <th>Tình Trạng</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="customerList">
+                {% for customer in customers.items %}
+                    <tr>
+                        <td>{{ customer.name }}</td>
+                        <td>{{ customer.phone }}</td>
+                        <td>{{ customer.address }}</td>
+                        <td>{{ customer.role }}</td>
+                        <td>{{ customer.status }}</td>
+                        <td>
+                            <a href="{{ url_for('view_customer', customer_id=customer.id) }}" class="btn btn-info btn-sm">View</a>
+                            <a href="{{ url_for('edit_customer', customer_id=customer.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{{ url_for('delete_customer', customer_id=customer.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if customers.has_prev %}
+                    <li class="page-item"><a class="page-link" href="{{ url_for('index', page=customers.prev_num) }}">Previous</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link">Previous</a></li>
+                {% endif %}
+        
+                {% for page_num in customers.iter_pages() %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == customers.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><a class="page-link">...</a></li>
+                    {% endif %}
+                {% endfor %}
+        
+                {% if customers.has_next %}
+                    <li class="page-item"><a class="page-link" href="{{ url_for('index', page=customers.next_num) }}">Next</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+    </div>
+
+    <footer class="text-center mt-5">
+        <p>Email: khanhlb@meddental.vn</p>
+        <p>Website: <a href="https://www.meddental.vn" target="_blank">www.meddental.vn</a></p>
+    </footer>
+
+    <script>
+        document.getElementById('searchCustomer').addEventListener('keyup', function () {
+            const query = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#customerList tr');
+
+            rows.forEach(function (row) {
+                const name = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+                const phone = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                const role = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+
+                if (name.includes(query) || phone.includes(query) || role.includes(query)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
