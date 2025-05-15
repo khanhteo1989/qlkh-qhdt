@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiến Trình Chữa Bệnh - {{ customer.name }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+        .container {
+            max-width: 1200px;
+            padding: 30px;
+        }
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #004085;
+            margin-bottom: 20px;
+        }
+        .form-row {
+            margin-bottom: 15px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+        }
+        .form-control {
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-group .form-control {
+            margin-bottom: 10px;
+        }
+        .readonly-input {
+            background-color: #e9ecef;
+            border-color: #ccc;
+            pointer-events: none;
+        }
+        .btn-remove {
+            background-color: red;
+            color: white;
+            margin-top: 5px;
+        }
+        .btn-add {
+            background-color: #28a745;
+            color: white;
+        }
+        .form-group .form-control,
+        .form-row .form-group {
+            margin-top: 15px;
+        }
+        .section-header {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="header-title">Tiến Trình Chữa Bệnh - <strong>{{ customer.name }}</strong></h1>
+        
+
+        
+        <!-- Edit Customer Form -->
+        <form action="{{ url_for('edit_customer', customer_id=customer.id) }}" method="POST">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="name">Họ Tên</label>
+                    <input type="text" id="name" name="name" class="form-control readonly-input" value="{{ customer.name }}" disabled>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="phone">SĐT</label>
+                    <input type="text" id="phone" name="phone" class="form-control readonly-input" value="{{ customer.phone }}" disabled>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="address">Địa Chỉ</label>
+                    <input type="text" id="address" name="address" class="form-control readonly-input" value="{{ customer.address }}" disabled>
+                </div>
+            </div>
+        
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="dob">Ngày Sinh</label>
+                    <input type="text" id="address" name="address" class="form-control readonly-input" value="{{ customer.address }}" disabled>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="cccd">Mã NV, CCCD</label>
+                    <input type="text" id="cccd" name="cccd" class="form-control readonly-input" value="{{ customer.cccd }}" disabled>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="cv_code">Gắn mã CV</label>
+                    <input type="text" id="cv_code" name="cv_code" class="form-control readonly-input" value="{{ customer.role }}" disabled>
+                </div>
+            </div>
+        
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="status">Tình Trạng</label>
+                    <input type="text" id="status" name="status" class="form-control readonly-input" value="{{ customer.status }}" disabled>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="program_select">CT Áp Dụng</label>
+                    <select class="form-control readonly-input" id="program_select" name="program_select" disabled>
+                        {% for i in range(1, 51) %}
+                            <option value="CT{{ i }}" {% if customer.program == 'CT{{ i }}' %}selected{% endif %}>CT{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="notes">Ghi Chú</label>
+                    <textarea id="notes" name="notes" class="form-control readonly-input" disabled>{{ customer.notes }}</textarea>
+                </div>
+            </div>
+        
+            <!-- Section for Treatment Plans, Appointment Schedules -->
+            <div class="section-header">
+                <h4>Thêm Lộ Trình Chữa Bệnh, Lịch Hẹn</h4>
+            </div>
+            <div id="treatment_plan_section">
+                {% for item in treatment_data %}
+                <div class="form-row treatment-item">
+                    <div class="form-group col-md-4">
+                        <label for="treatment_plan_{{ loop.index0 }}">Lộ Trình Chữa Bệnh</label>
+                        <select id="treatment_plan_{{ loop.index0 }}" name="treatment_plan_{{ loop.index0 }}" class="form-control" required>
+                            <option value="Chỉnh nha" {% if item.treatment == 'Chỉnh nha' %}selected{% endif %}>Chỉnh nha</option>
+                            <option value="Tổng quát" {% if item.treatment == 'Tổng quát' %}selected{% endif %}>Tổng quát</option>
+                            <option value="Trồng Implant" {% if item.treatment == 'Trồng Implant' %}selected{% endif %}>Trồng Implant</option>
+                            <option value="Nhổ răng" {% if item.treatment == 'Nhổ răng' %}selected{% endif %}>Nhổ răng</option>
+                            <option value="Răng sứ thẩm mỹ" {% if item.treatment == 'Răng sứ thẩm mỹ' %}selected{% endif %}>Răng sứ thẩm mỹ</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="appointment_schedule_{{ loop.index0 }}">Lịch Đặt Hẹn</label>
+                        <input type="date" id="appointment_schedule_{{ loop.index0 }}" name="appointment_schedule_{{ loop.index0 }}" class="form-control" value="{{ item.appointment }}"/>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <input type="checkbox" id="cancel_{{ loop.index0 }}" name="cancel_{{ loop.index0 }}">
+                        <label for="cancel_{{ loop.index0 }}">Hủy Lộ Trình này</label>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <button type="button" class="btn btn-add" id="add_treatment_plan">Thêm Mới Lộ Trình</button>
+        
+            <div class="form-group mt-4">
+                <label for="date_added">Ngày Nhập</label>
+                <input type="text" id="date_added" name="date_added" class="form-control readonly-input" value="{{ customer.date_added }}" disabled>
+            </div>
+
+            <!-- Buttons: Save changes and Back to customer list -->
+            <button type="submit" class="btn btn-custom">Lưu Thay Đổi</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary ml-2">Quay lại danh sách khách hàng</a>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('add_treatment_plan').addEventListener('click', function() {
+            const treatmentSection = document.getElementById('treatment_plan_section');
+            const newIndex = treatmentSection.children.length + 1;
+
+            const newTreatmentHTML = `
+                <div class="form-row treatment-item">
+                    <div class="form-group col-md-4">
+                        <label for="treatment_plan_${newIndex}">Lộ Trình Chữa Bệnh</label>
+                        <select id="treatment_plan_${newIndex}" name="treatment_plan_${newIndex}" class="form-control" required>
+                            <option value="Chỉnh nha">Chỉnh nha</option>
+                            <option value="Tổng quát">Tổng quát</option>
+                            <option value="Trồng Implant">Trồng Implant</option>
+                            <option value="Nhổ răng">Nhổ răng</option>
+                            <option value="Răng sứ thẩm mỹ">Răng sứ thẩm mỹ</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="appointment_schedule_${newIndex}">Lịch Đặt Hẹn</label>
+                        <input type="date" id="appointment_schedule_${newIndex}" name="appointment_schedule_${newIndex}" class="form-control">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <input type="checkbox" id="cancel_${newIndex}" name="cancel_${newIndex}">
+                        <label for="cancel_${newIndex}">Hủy Lộ Trình này</label>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <input type="checkbox" id="continue_${newIndex}" name="continue_${newIndex}">
+                        <label for="continue_${newIndex}">Tiếp Tục Lộ Trình này</label>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <input type="checkbox" id="complete_${newIndex}" name="complete_${newIndex}">
+                        <label for="complete_${newIndex}">Hoàn Thành Lộ Trình này</label>
+                    </div>
+                </div>
+            `;
+            treatmentSection.insertAdjacentHTML('beforeend', newTreatmentHTML);
+        });
+    </script>
+</body>
+</html>
