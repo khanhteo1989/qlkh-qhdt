@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Excel File</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Upload Excel File</h1>
+        <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Choose Excel File</label>
+                <input type="file" class="form-control" id="file" name="file" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+
+        {% if customers %}
+            <h2 class="mt-4">Uploaded Customer Data:</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Họ Tên</th>
+                        <th>Địa Chỉ</th>
+                        <th>SĐT</th>
+                        <th>Mã nv,CCCD</th>
+                        <th>Ngày Sinh</th>
+                        <th>CV Quản Lý</th>
+                        <th>Tình Trạng</th>
+                        <th>CT Áp Dụng</th>
+                        <th>Ghi Chú</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customers %}
+                        <tr>
+                            <td>{{ customer.name }}</td>
+                            <td>{{ customer.address }}</td>
+                            <td>{{ customer.phone }}</td>
+                            <td>{{ customer.cccd }}</td>
+                            <td>{{ customer.dob }}</td>
+                            <td>{{ customer.role }}</td>
+                            <td>{{ customer.status }}</td>
+                            <td>{{ customer.program }}</td>
+                            <td>{{ customer.notes }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
